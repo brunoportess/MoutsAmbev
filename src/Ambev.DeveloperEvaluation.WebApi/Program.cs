@@ -5,6 +5,7 @@ using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
+using Ambev.DeveloperEvaluation.ORM.Seed;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,13 @@ public class Program
             app.UseBasicHealthChecks();
 
             app.MapControllers();
+
+                    // Seed initial data if database is empty
+            using (var scope = app.Services.CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                DatabaseSeeder.SeedAsync(app.Services, logger).GetAwaiter().GetResult(); 
+            }
 
             app.Run();
         }

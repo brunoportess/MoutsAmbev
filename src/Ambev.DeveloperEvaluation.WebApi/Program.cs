@@ -74,7 +74,17 @@ public class Program
             using (var scope = app.Services.CreateScope())
             {
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                DatabaseSeeder.SeedAsync(app.Services, logger).GetAwaiter().GetResult(); 
+                try
+                {
+                    DatabaseSeeder
+                        .SeedAsync(app.Services, logger)
+                        .GetAwaiter()
+                        .GetResult();
+                }
+                catch (Exception seedEx)
+                {
+                    logger.LogError(seedEx, "Falha ao executar seed. Continuando sem seed.");
+                }
             }
 
             app.Run();

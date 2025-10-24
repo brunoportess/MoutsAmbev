@@ -11,6 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=50080
       - ASPNETCORE_HTTPS_PORTS=50081
+      - ConnectionStrings__DefaultConnection=Host=ambev.developerevaluation.database;Port=5432;Database=developer_evaluation;Username=developer;Password=ev@luAt10n;Pooling=true;SSL Mode=Disable;Trust Server Certificate=true
     ports:
       - "50080:50080"
       - "50081:50081"
@@ -27,7 +28,7 @@ services:
       POSTGRES_USER: developer
       POSTGRES_PASSWORD: ev@luAt10n
     ports:
-      - "5432"
+      - "56454:5432"
     restart: unless-stopped
 
   ambev.developerevaluation.nosql:

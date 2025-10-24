@@ -9,11 +9,11 @@ services:
       dockerfile: src/Ambev.DeveloperEvaluation.WebApi/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=80080
-      - ASPNETCORE_HTTPS_PORTS=80081
+      - ASPNETCORE_HTTP_PORTS=50080
+      - ASPNETCORE_HTTPS_PORTS=50081
     ports:
-      - "80080:80080"
-      - "80081:80081"
+      - "50080:50080"
+      - "50081:50081"
 #    volumes:
 #      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
 #      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

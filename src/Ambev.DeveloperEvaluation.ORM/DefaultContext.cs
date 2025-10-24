@@ -27,17 +27,20 @@ public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 {
     public DefaultContext CreateDbContext(string[] args)
     {
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "../Ambev.DeveloperEvaluation.WebApi");
+
         IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(basePath)
             .AddJsonFile("appsettings.json")
             .Build();
 
         var builder = new DbContextOptionsBuilder<DefaultContext>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
+        Console.WriteLine($"🔗 ConnectionString: {connectionString ?? "NULL"}");
 
         builder.UseNpgsql(
                connectionString,
-               b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.WebApi")
+               b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
         );
 
         return new DefaultContext(builder.Options);

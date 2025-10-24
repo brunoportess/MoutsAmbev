@@ -10,7 +10,7 @@ public interface ICartRepository
         int size,
         string? order,
         CancellationToken ct = default);
-    Task<Cart?> GetAsync(int id, CancellationToken ct);
+    Task<Cart?> GetAsync(Guid id, CancellationToken ct);
     Task<Cart> AddAsync(Cart p, CancellationToken ct);
     Task<Cart> UpdateAsync(Cart p, CancellationToken ct);
     Task DeleteAsync(Cart p, CancellationToken ct);

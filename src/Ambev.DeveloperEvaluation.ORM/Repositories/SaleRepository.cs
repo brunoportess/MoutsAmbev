@@ -21,7 +21,7 @@ public class SaleRepository : ISaleRepository
         string? order,
         CancellationToken ct)
     {
-        var q = _set.Include(s => s.Items).AsQueryable();
+        var q = _set.Include(s => s.SaleItems).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(order))
         {
@@ -48,7 +48,7 @@ public class SaleRepository : ISaleRepository
     }
 
     public async Task<Sale?> GetAsync(Guid id, CancellationToken ct)
-        => await _set.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, ct);
+        => await _set.Include(s => s.SaleItems).FirstOrDefaultAsync(s => s.Id == id, ct);
 
     public async Task<Sale> AddAsync(Sale sale, CancellationToken ct)
     {

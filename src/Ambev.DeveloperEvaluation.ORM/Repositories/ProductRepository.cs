@@ -41,7 +41,7 @@ public class ProductRepository : IProductRepository
     public async Task<IReadOnlyList<string>> GetCategoriesAsync(CancellationToken ct)
         => await _set.Select(x => x.Category).Distinct().OrderBy(x => x).ToListAsync(ct);
 
-    public Task<Product?> GetAsync(int id, CancellationToken ct) => _set.FindAsync(new object[]{id}, ct).AsTask();
+    public Task<Product?> GetAsync(Guid id, CancellationToken ct) => _set.FindAsync(new object[]{id}, ct).AsTask();
 
     public async Task<Product> AddAsync(Product p, CancellationToken ct)
     {

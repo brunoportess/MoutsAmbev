@@ -42,7 +42,7 @@ public class CartRepository : ICartRepository
         return (data, total);
     }
 
-    public async Task<Cart?> GetAsync(int id, CancellationToken ct)
+    public async Task<Cart?> GetAsync(Guid id, CancellationToken ct)
         => await _set.Include(c => c.Products).FirstOrDefaultAsync(c => c.Id == id, ct);
 
     public async Task<Cart> AddAsync(Cart p, CancellationToken ct)

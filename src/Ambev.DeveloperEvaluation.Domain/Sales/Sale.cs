@@ -11,19 +11,9 @@ namespace Ambev.DeveloperEvaluation.Domain.Sales
         public DateTime SaleDate { get; private set; }
         public decimal TotalAmount { get; private set; }
 
-        private readonly List<SaleItem> _items = [];
-        public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
+        public List<SaleItem> SaleItems { get; private set; } = [];
 
         protected Sale() { }
-
-        public Sale(Guid id, Guid customerId, string customerName, DateTime saleDate, decimal totalAmount)
-        {
-            Id = id;
-            CustomerId = customerId;
-            CustomerName = customerName;
-            SaleDate = saleDate;
-            TotalAmount = totalAmount;
-        }
 
         public Sale(Guid customerId, string customerName)
         {
@@ -35,18 +25,16 @@ namespace Ambev.DeveloperEvaluation.Domain.Sales
 
         public void AddItem(Guid productId, string productTitle, int quantity, decimal unitPrice)
         {
-            var item = new SaleItem(productId, productTitle, quantity, unitPrice);
-            _items.Add(item);
+            var item = new SaleItem(Id, productId, productTitle, quantity, unitPrice);
+            SaleItems.Add(item);
             RecalculateTotal();
         }
 
         private void RecalculateTotal()
         {
-            decimal total = 0;
-            foreach (var item in _items)
-                total += item.Total;
-
-            TotalAmount = total;
+            TotalAmount = 0;
+            foreach (var item in SaleItems)
+                TotalAmount += item.Total;
         }
     }
 }

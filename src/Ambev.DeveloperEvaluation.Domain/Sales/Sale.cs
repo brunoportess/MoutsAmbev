@@ -1,50 +1,52 @@
-namespace Ambev.DeveloperEvaluation.Domain.Sales;
+﻿using System;
+using System.Collections.Generic;
 
-public class Sale
+namespace Ambev.DeveloperEvaluation.Domain.Sales
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
-    public string SaleNumber { get; private set; } = string.Empty;
-    public DateTimeOffset SaleDate { get; private set; } = DateTimeOffset.UtcNow;
-    public Guid CustomerId { get; private set; }
-    public string CustomerName { get; private set; } = string.Empty;
-    public string Branch { get; private set; } = string.Empty;
-    public decimal TotalAmount { get; private set; }
-    public bool IsCancelled { get; private set; }
-
-    private readonly List<SaleItem> _items = [];
-    public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
-
-    private Sale() { }
-
-    public Sale(string saleNumber, DateTimeOffset saleDate, Guid customerId, string customerName, string branch)
+    public class Sale
     {
-        if (string.IsNullOrWhiteSpace(saleNumber)) throw new ArgumentException("SaleNumber required");
-        SaleNumber = saleNumber;
-        SaleDate = saleDate;
-        CustomerId = customerId;
-        CustomerName = customerName ?? string.Empty;
-        Branch = branch ?? string.Empty;
-    }
+        public Guid Id { get; private set; }
+        public Guid CustomerId { get; private set; }
+        public string CustomerName { get; private set; } = string.Empty;
+        public DateTime SaleDate { get; private set; }
+        public decimal TotalAmount { get; private set; }
 
-    public void AddItem(Guid productId, string productTitle, int quantity, decimal unitPrice)
-    {
-        var item = new SaleItem(productId, productTitle, quantity, unitPrice);
-        _items.Add(item);
-        RecalculateTotal();
-    }
+        private readonly List<SaleItem> _items = [];
+        public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
 
-    public void RemoveItem(Guid productId)
-    {
-        var toRemove = _items.FirstOrDefault(i => i.ProductId == productId);
-        if (toRemove is null) return;
-        _items.Remove(toRemove);
-        RecalculateTotal();
-    }
+        protected Sale() { }
 
-    public void Cancel() => IsCancelled = true;
+        public Sale(Guid id, Guid customerId, string customerName, DateTime saleDate, decimal totalAmount)
+        {
+            Id = id;
+            CustomerId = customerId;
+            CustomerName = customerName;
+            SaleDate = saleDate;
+            TotalAmount = totalAmount;
+        }
 
-    public void RecalculateTotal()
-    {
-        TotalAmount = _items.Sum(i => i.Total);
+        public Sale(Guid customerId, string customerName)
+        {
+            Id = Guid.NewGuid();
+            CustomerId = customerId;
+            CustomerName = customerName;
+            SaleDate = DateTime.UtcNow;
+        }
+
+        public void AddItem(Guid productId, string productTitle, int quantity, decimal unitPrice)
+        {
+            var item = new SaleItem(productId, productTitle, quantity, unitPrice);
+            _items.Add(item);
+            RecalculateTotal();
+        }
+
+        private void RecalculateTotal()
+        {
+            decimal total = 0;
+            foreach (var item in _items)
+                total += item.Total;
+
+            TotalAmount = total;
+        }
     }
 }

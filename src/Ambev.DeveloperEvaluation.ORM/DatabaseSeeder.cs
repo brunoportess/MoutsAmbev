@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Ambev.DeveloperEvaluation.ORM.Seed;
+namespace Ambev.DeveloperEvaluation.ORM;
 
 public static class DatabaseSeeder
 {
@@ -66,18 +66,22 @@ public static class DatabaseSeeder
         var saleFaker = new Bogus.Faker<Sale>("en")
             .CustomInstantiator(f =>
             {
+                // Cria a venda com dados válidos
                 var sale = new Sale(
-                    f.Commerce.Ean13(),
-                    DateTimeOffset.UtcNow.AddDays(-f.Random.Int(1, 30)),
-                    Guid.NewGuid(),
-                    f.Name.FullName(),
-                    f.Address.City());
+                    Guid.NewGuid(),                        // id
+                    Guid.NewGuid(),                        // customerId
+                    f.Name.FullName(),                     // customerName
+                    DateTime.UtcNow.AddDays(-f.Random.Int(1, 30)), // saleDate
+                    0m                                     // totalAmount inicial
+                );
 
+                // Adiciona itens
                 var prods = f.Random.ListItems(products, f.Random.Int(2, 8));
                 foreach (var p in prods)
                 {
                     sale.AddItem(Guid.NewGuid(), p.Title, f.Random.Int(1, 10), p.Price);
                 }
+
                 return sale;
             });
 

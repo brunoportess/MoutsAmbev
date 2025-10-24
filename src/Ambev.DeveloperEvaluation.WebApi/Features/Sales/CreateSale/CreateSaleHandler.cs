@@ -18,7 +18,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleRequest, CreateSaleRe
 
     public async Task<CreateSaleResponse> Handle(CreateSaleRequest request, CancellationToken ct)
     {
-        var sale = new Sale(Guid.NewGuid().ToString("N")[..10].ToUpperInvariant(), DateTimeOffset.UtcNow, request.CustomerId, string.Empty, request.Branch);
+        var sale = new Sale(request.CustomerId, string.Empty);
         foreach (var item in request.Items)
         {
             sale.AddItem(item.ProductId, item.ProductTitle, item.Quantity, item.UnitPrice);

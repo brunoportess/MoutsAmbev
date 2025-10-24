@@ -2,38 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Ambev.DeveloperEvaluation.ORM.Mapping;
-
-public class SaleConfiguration : IEntityTypeConfiguration<Sale>
+namespace Ambev.DeveloperEvaluation.ORM.Mapping
 {
-    public void Configure(EntityTypeBuilder<Sale> builder)
+    public class SaleConfiguration : IEntityTypeConfiguration<Sale>
     {
-        builder.ToTable("Sales");
-
-        builder.HasKey(s => s.Id);
-        builder.Property(s => s.Id)
-            .ValueGeneratedNever();
-
-        builder.Property(s => s.CustomerId)
-            .IsRequired();
-
-        builder.Property(s => s.TotalAmount)
-            .HasColumnType("numeric(18,2)");
-
-        builder.OwnsMany<SaleItem>("_items", b =>
+        public void Configure(EntityTypeBuilder<Sale> builder)
         {
-            b.WithOwner().HasForeignKey("SaleId");
-            b.Property<Guid>("Id").ValueGeneratedNever();
-            b.HasKey("Id");
+            builder.ToTable("Sales");
 
-            b.Property(i => i.ProductId).IsRequired();
-            b.Property(i => i.ProductTitle).HasMaxLength(200);
-            b.Property(i => i.Quantity).IsRequired();
-            b.Property(i => i.UnitPrice).HasColumnType("numeric(18,2)");
-            b.Property(i => i.DiscountPercent).HasColumnType("numeric(18,2)");
-            b.Property(i => i.Total).HasColumnType("numeric(18,2)");
+            builder.HasKey(s => s.Id);
+            builder.Property(s => s.Id);
 
-            b.ToTable("SaleItems");
-        });
+            builder.Property(s => s.CustomerId).IsRequired();
+            builder.Property(s => s.CustomerName).HasMaxLength(200).IsRequired();
+            builder.Property(s => s.SaleDate).IsRequired();
+            builder.Property(s => s.TotalAmount).HasColumnType("numeric(18,2)");
+
+            builder.HasMany(s => s.SaleItems)
+                   .WithOne(i => i.Sale)
+                   .HasForeignKey(i => i.SaleId)
+                   .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct;
 public class UpdateProductRequest : IRequest<ProductResponse?>
 {
     [Required] 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     [Required] 
     public string Title { get; set; } = string.Empty;
     [Required] 

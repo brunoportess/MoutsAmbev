@@ -42,7 +42,7 @@ public static class DatabaseSeeder
 
         // CARTS
         var cartFaker = new Bogus.Faker<Cart>("en")
-            .RuleFor(c => c.UserId, f => f.Random.Int(1, 20))
+            .RuleFor(c => c.UserId, f => Guid.NewGuid())
             .RuleFor(c => c.Date, f => DateOnly.FromDateTime(f.Date.Past(1)))
             .FinishWith((f, c) =>
             {
@@ -51,6 +51,8 @@ public static class DatabaseSeeder
                 {
                     items.Add(new CartProduct
                     {
+                        Id = Guid.NewGuid(),
+                        CartId = c.Id,
                         ProductId = prod.Id,
                         Quantity = f.Random.Int(1, 5)
                     });
@@ -69,10 +71,7 @@ public static class DatabaseSeeder
                 // Cria a venda com dados válidos
                 var sale = new Sale(
                     Guid.NewGuid(),                        // id
-                    Guid.NewGuid(),                        // customerId
-                    f.Name.FullName(),                     // customerName
-                    DateTime.UtcNow.AddDays(-f.Random.Int(1, 30)), // saleDate
-                    0m                                     // totalAmount inicial
+                    f.Name.FullName()                     // customerName
                 );
 
                 // Adiciona itens
@@ -89,7 +88,7 @@ public static class DatabaseSeeder
         await ctx.Set<Sale>().AddRangeAsync(sales);
         await ctx.SaveChangesAsync();
 
-        logger.LogInformation("✅ Seed complete: {ProductCount} products, {CartCount} carts, {SaleCount} sales created.",
+        logger.LogInformation("Seed complete: {ProductCount} products, {CartCount} carts, {SaleCount} sales created.",
             products.Count, carts.Count, sales.Count);
     }
 }

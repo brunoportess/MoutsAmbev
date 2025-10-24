@@ -20,7 +20,7 @@ public class CreateCartHandler : IRequestHandler<CreateCartRequest, CartResponse
         var cart = new Cart
         {
             UserId = request.UserId,
-            Date = request.Date,
+            Date = request.Date,     
             Products = request.Products.Select(p => new CartProduct { ProductId = p.ProductId, Quantity = p.Quantity }).ToList()
         };
         await _repo.AddAsync(cart, ct);

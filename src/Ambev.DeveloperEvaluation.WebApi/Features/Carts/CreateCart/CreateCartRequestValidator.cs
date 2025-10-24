@@ -6,7 +6,7 @@ public class CreateCartRequestValidator : AbstractValidator<CreateCartRequest>
 {
     public CreateCartRequestValidator()
     {
-        RuleFor(x => x.UserId).GreaterThan(0);
+        RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.Products).NotEmpty();
         RuleForEach(x => x.Products).ChildRules(i =>
         {

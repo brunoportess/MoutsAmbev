@@ -65,7 +65,7 @@ public class CartsController : BaseController
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CartResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CartResponse>> GetById(int id, CancellationToken ct)
+    public async Task<ActionResult<CartResponse>> GetById(Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetCartById.GetCartByIdRequest(id), ct);
         if (result is null) return (ActionResult)NotFound();
@@ -79,11 +79,11 @@ public class CartsController : BaseController
     /// <param name="request">The payload containing updated cart data.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>The updated cart or 404 if not found.</returns>
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(CartResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CartResponse>> Update(
-        int id,
+        Guid id,
         [FromBody] UpdateCart.UpdateCartRequest request,
         CancellationToken ct)
     {
@@ -102,7 +102,7 @@ public class CartsController : BaseController
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var ok = await _mediator.Send(new DeleteCart.DeleteCartRequest(id), ct);
         return ok ? NoContent() : NotFound();

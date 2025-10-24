@@ -25,7 +25,7 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
         builder.OwnsMany<CartProduct>("Products", cb =>
         {
             cb.WithOwner().HasForeignKey("CartId");
-            cb.Property<int>("Id");
+            cb.Property<Guid>("Id");
             cb.HasKey("Id");
 
             cb.Property(i => i.ProductId).IsRequired();

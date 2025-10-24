@@ -64,10 +64,10 @@ public class ProductsController : BaseController
     /// <param name="id">The unique identifier of the product.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>The product if found, otherwise 404.</returns>
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct.ProductResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetById(int id, CancellationToken ct)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProductById.GetProductByIdRequest(id), ct);
         if (result is null) return NotFound();
@@ -81,11 +81,11 @@ public class ProductsController : BaseController
     /// <param name="request">The payload containing updated product information.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>The updated product or 404 if not found.</returns>
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct.ProductResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(
-        int id,
+        Guid id,
         [FromBody] Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct.UpdateProductRequest request,
         CancellationToken ct)
     {
@@ -104,7 +104,7 @@ public class ProductsController : BaseController
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var ok = await _mediator.Send(new Ambev.DeveloperEvaluation.WebApi.Features.Products.DeleteProduct.DeleteProductRequest(id), ct);
         return ok ? NoContent() : NotFound();
